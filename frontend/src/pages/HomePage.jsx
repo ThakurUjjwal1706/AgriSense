@@ -55,6 +55,16 @@ const features = [
     cta: 'View Prices',
     badges: ['Live Data', 'Market Trends', 'MSP'],
   },
+  {
+    icon: '🛰️',
+    image: '/images/hsi.png',
+    title: 'Hyperspectral AI',
+    desc: 'Analyze invisible stress markers using 3D-CNN Satellite/Drone Imagery for early disease detection.',
+    color: 'sky',
+    link: '/hsi',
+    cta: 'Analyze Cube',
+    badges: ['3D-CNN', '.npy Analysis'],
+  },
 ]
 
 const testimonials = [
@@ -198,10 +208,10 @@ const HomePage = () => {
         <div className="container">
           <div className="section-header">
             <div className="section-tag">🚀 Core Features</div>
-            <h2 className="section-title">Four Powerful AI Tools</h2>
-            <p className="section-subtitle">Comprehensive crop intelligence from diagnosis to harvest forecasting — plus live weather data</p>
+            <h2 className="section-title">Five Powerful AI Tools</h2>
+            <p className="section-subtitle">Comprehensive crop intelligence from diagnosis to harvest forecasting — plus live weather data & HSI</p>
           </div>
-          <div className="features__grid features__grid--4">
+          <div className="features__grid">
             {features.map((f, i) => (
               <div
                 key={i}

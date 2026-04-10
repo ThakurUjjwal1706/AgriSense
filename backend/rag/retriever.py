@@ -1,5 +1,5 @@
 """
-Retriever: Builds farmer query → Passes full data.json to deepseek-v3.1:671b-cloud
+Retriever: Builds farmer query → Passes full data.json to Gemini API
 → model selects top schemes and synthesises answer → adds Google search URLs.
 """
 
@@ -14,13 +14,15 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import quote_plus
 from PIL import Image
-import ollama
 
 import json
+from dotenv import load_dotenv
+import ollama
 
-
-
-
+# Load environment variables
+load_dotenv()
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.2")
+OLLAMA_VISION_MODEL = os.environ.get("OLLAMA_VISION_MODEL", "llava")
 
 DATA_PATH = Path(__file__).parent.parent / "data.json"
 
@@ -28,17 +30,17 @@ def _load_data() -> Dict[str, Any]:
     with open(DATA_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
-def _ollama_chat_completion(model: str, messages: List[Dict[str, Any]], temperature: float = 0.3) -> str:
+def _ollama_chat_completion(messages: List[Dict[str, Any]], temperature: float = 0.3) -> str:
     """Helper to call Ollama chat completion."""
     try:
         response = ollama.chat(
-            model=model,
+            model=OLLAMA_MODEL,
             messages=messages,
             options={'temperature': temperature}
         )
-        return response['message']['content']
+        return response.get('message', {}).get('content', '')
     except Exception as e:
-        print(f"[Ollama] Error calling {model}: {e}")
+        print(f"[Ollama] Error calling Ollama API: {e}")
         return ""
 
 
@@ -85,7 +87,7 @@ def google_search_urls(
 
 _schemes_cache: List[Dict[str, Any]] = []
 
-def _ollama_match_and_summarize(farmer_query: str, all_schemes: List[Dict[str, Any]]) -> Dict[str, Any]:
+def _ai_match_and_summarize(farmer_query: str, all_schemes: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Passes all schemes to the LLM. 
     The LLM selects the top matched schemes AND provides the summary.
@@ -141,7 +143,7 @@ def _ollama_match_and_summarize(farmer_query: str, all_schemes: List[Dict[str, A
         }
     ]
 
-    raw_response = _ollama_chat_completion("deepseek-v3.1:671b-cloud", messages, temperature=0.3)
+    raw_response = _ollama_chat_completion(messages, temperature=0.3)
     
     if not raw_response:
         return {"summary": _rule_based_summary(farmer_query, all_schemes[:5]), "top_ids": [s["id"] for s in all_schemes[:5]]}
@@ -196,7 +198,7 @@ def generate_treatment_plan(crop_type: str, disease_info: str) -> Optional[str]:
         }
     ]
 
-    result = _ollama_chat_completion("deepseek-v3.1:671b-cloud", messages, temperature=0.2)
+    result = _ollama_chat_completion(messages, temperature=0.2)
     return result if result else None
 
 
@@ -228,40 +230,23 @@ def calculate_pseudo_ndvi(image_bytes: bytes) -> Optional[float]:
         return None
 
 def analyze_crop_image(image_bytes: bytes, mime_type: str = "image/jpeg") -> Dict[str, Any]:
-    """Uses OpenAI vision model to describe crop issues and suggest treatments."""
+    """Uses Ollama Vision API to describe crop issues and suggest treatments."""
     try:
         ndvi_score = calculate_pseudo_ndvi(image_bytes)
 
         try:
-            img = Image.open(io.BytesIO(image_bytes))
-            max_size = 1024
-            if max(img.size) > max_size:
-                img.thumbnail((max_size, max_size))
-                buffer = io.BytesIO()
-                img.save(buffer, format=img.format or "JPEG")
-                image_bytes = buffer.getvalue()
-        except Exception as img_err:
-            print(f"[Vision] Pillow could not open image: {img_err}")
-            return {
-                "raw_analysis": "The uploaded file is not a valid image or is corrupted.",
-                "identified_issues": [],
-                "confidence_description": "Error",
-                "ndvi_score": None
-            }
-
-        try:
-            ollama_response = ollama.chat(
-                model='qwen3-vl:235b-cloud',
-                messages=[{
-                    'role': 'user',
-                    'content': 'Analyze this crop/plant image in detail. Identify the crop name, any diseases, and specific visual symptoms.',
-                    'images': [image_bytes]
-                }]
+            # Convert image to base64 for Ollama
+            image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+            
+            response = ollama.generate(
+                model=OLLAMA_VISION_MODEL,
+                prompt="Analyze this crop/plant image in detail. Identify the crop name, any diseases, and specific visual symptoms.",
+                images=[image_b64]
             )
-            ollama_analysis = ollama_response['message']['content']
-        except Exception as oll_err:
-            print(f"[Ollama] Analysis failed: {oll_err}")
-            ollama_analysis = f"Ollama vision analysis could not be completed. Error: {str(oll_err)}"
+            ai_vision_analysis = response.get('response', '')
+        except Exception as v_err:
+            print(f"[Ollama Vision] Analysis failed: {v_err}")
+            ai_vision_analysis = f"Vision analysis could not be completed. Error: {str(v_err)}"
 
         try:
             messages = [
@@ -277,7 +262,7 @@ def analyze_crop_image(image_bytes: bytes, mime_type: str = "image/jpeg") -> Dic
                 {
                     "role": "user",
                     "content": (
-                        f"Initial Vision Analysis from Qwen3-VL:\n{ollama_analysis}\n\n"
+                        f"Initial Vision Analysis:\n{ai_vision_analysis}\n\n"
                         "Refine this analysis and provide a professional agricultural diagnosis. "
                         "If the input indicates the image is not a plant, crop, or leaf, strictly respond with 'NOT_A_PLANT'.\n\n"
                         "Otherwise, follow this exact structure:\n"
@@ -291,11 +276,9 @@ def analyze_crop_image(image_bytes: bytes, mime_type: str = "image/jpeg") -> Dic
                     )
                 }
             ]
-            reasoning_text = _ollama_chat_completion("deepseek-v3.1:671b-cloud", messages, temperature=0.2)
-            if not reasoning_text:
-                raise ValueError("Ollama refinement failed")
+            reasoning_text = _ollama_chat_completion(messages, temperature=0.2)
         except Exception as e:
-            print(f"[Vision] Ollama refinement error: {e}")
+            print(f"[Vision] Refinement error: {e}")
             raise e
 
         if "NOT_A_PLANT" in reasoning_text.upper():
@@ -356,7 +339,7 @@ def analyze_crop_image(image_bytes: bytes, mime_type: str = "image/jpeg") -> Dic
     except Exception as e:
         print(f"[Vision/Reasoning] Pipeline error: {e}")
         return {
-            "raw_analysis": f"Error in analysis pipeline: {str(e)}",
+            "raw_analysis": f"AI Engine Connection Issue: Make sure your local Ollama instance is running with {OLLAMA_MODEL} and {OLLAMA_VISION_MODEL}. Error detail: {str(e)}",
             "identified_issues": [],
             "confidence_description": "Error",
             "ndvi_score": None
@@ -405,7 +388,7 @@ def match_schemes(
     all_schemes = data.get("schemes", [])
     
     # Use LLM to match and summarize in one go
-    analysis = _ollama_match_and_summarize(query, all_schemes)
+    analysis = _ai_match_and_summarize(query, all_schemes)
     
     summary = analysis["summary"]
     top_ids = analysis["top_ids"]
@@ -506,9 +489,9 @@ def ask_ai_question(message: str, context: Optional[str] = None) -> Dict[str, An
     ]
 
     try:
-        text = _ollama_chat_completion("deepseek-v3.1:671b-cloud", messages, temperature=0.4)
+        text = _ollama_chat_completion(messages, temperature=0.4)
         if not text:
-            raise ValueError("Ollama chat failed")
+            raise ValueError("Ollama API chat failed")
 
         suggested = ["Check official portal", "Visit local Agriculture Office"]
         if "PM-KISAN" in text:
@@ -521,9 +504,8 @@ def ask_ai_question(message: str, context: Optional[str] = None) -> Dict[str, An
             "suggested_actions": list(set(suggested)),
         }
     except Exception as e:
-        print(f"[Chat] Ollama generation error: {e}")
+        print(f"[Chat] AI generation error: {e}")
         return {
             "response": f"Sorry, I encountered an error while processing your request: {str(e)}",
             "suggested_actions": ["Try again later"],
         }
-

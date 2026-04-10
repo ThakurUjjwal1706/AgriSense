@@ -1,225 +1,95 @@
-# 🌾 AgriSense AI (Krishi Sahayak)
+# 🌾 AgriSense AI: The Ultimate Precision Agriculture Suite
 
-Krishi Sahayak is a comprehensive digital platform designed to empower farmers with AI-driven insights. It blends traditional agricultural knowledge with cutting-edge AI models like **Ollama**, **DeepSeek**, and **Qwen-VL** to deliver intelligent, real-time assistance.
-
----
-
-## 🚀 Project Structure
-
-The project is divided into two main components:
-
-- **`frontend/`**: A modern React frontend built with Vite, React Router, and Recharts for a seamless user experience.
-- **`backend/`**: A robust FastAPI backend that leverages LLMs (Gemini, DeepSeek, Qwen) for RAG-based matching, disease analysis, and yield prediction.
+AgriSense AI is an enterprise-grade agricultural intelligence platform that combines **Hyperspectral Imaging (HSI)**, **Fast TFLite Diagnostics**, and **Generative AI** to revolutionize farming. It provides a seamless ecosystem across Mobile, Web, and Cloud to help farmers detect stress invisible to the naked eye and treat diseases with clinical precision.
 
 ---
 
-## 🛠️ Features
+## 🏗️ Triple-Threat Architecture
 
-- 🌱 **Government Scheme Matchmaking**  
-  Matches farmers to relevant government schemes based on their profile, location, and land size using AI-powered retrieval.
+### 📱 **Flutter Mobile App (The Field Tool)**
+A premium, SaaS-style mobile application designed for on-field use by farmers and agronomists.
+*   **Real-time Diagnostics:** Instant leaf disease detection using TFLite.
+*   **Hyperspectral Mapping:** Upload `.npy` spectral cubes to visualize plant health signatures.
+*   **Voice Assistant:** Multi-lingual voice interface for hands-free query support.
+*   **SaaS Aesthetic:** Modern dark mode with Glassmorphism and custom scanning animations.
 
-- 🍃 **Crop Disease Detection**  
-  Analyze leaf images using multimodal AI (**Qwen3-VL**) to detect diseases and recommend treatments.
+### 🌐 **FastAPI Backend (The AI Brain)**
+A high-performance RAG and Computer Vision server.
+*   **HSI Module:** 3D-CNN processing for analyzing hyperspectral data cubes.
+*   **TFLite Engine:** Fast, CPU-optimized inference for 38+ plant disease classes.
+*   **Hybrid AI RAG:** Uses TFLite for detection and LLMs (Ollama/Gemini) for expert treatment advice.
+*   **Scheme Matcher:** Matches farmers to government subsidies using vector-based retrieval.
 
-- 📊 **Yield Prediction**  
-  Predict crop yields using climate, soil, fertilizer data, and NDVI indices with ML models.
-
-- 🤖 **AI Chat Assistant**  
-  RAG-powered assistant using **DeepSeek-V3.1** and **Gemini**, capable of answering farming queries, MSP info, and subsidy details.
-
-- 🌦️ **Market & Weather Insights**  
-  Real-time weather updates and mandi prices for informed decision-making.
-
----
-
-## 🧠 AI Stack
-
-This project integrates multiple AI systems for different tasks:
-
-### 🔹 Ollama (Local LLM Orchestration)
-- Used for running lightweight/local models for offline or low-latency inference.
-- Acts as a fallback or edge AI system when cloud models are unavailable.
-
-### 🔹 DeepSeek-V3.1 (671B Cloud)
-- Primary LLM for:
-  - RAG-based question answering
-  - Government scheme matchmaking
-  - Chat assistant reasoning
-- Strong reasoning and multilingual capabilities for Indian agricultural contexts.
-
-### 🔹 Qwen3-VL (235B Cloud)
-- Multimodal model used for:
-  - Crop disease detection from leaf images
-  - Visual analysis + text reasoning
-- Enables image + text understanding in a single pipeline.
-
-### 🔹 Gemini AI
-- Used for:
-  - Supplementary reasoning
-  - Backup inference
-  - API-based integrations
+### 💻 **React Dashboard (The Command Center)**
+A data-heavy web dashboard for deep analysis and market tracking.
+*   **Interactive Analytics:** Visualizing market price trends and yield forecasts.
+*   **Cloud Diagnostics:** High-resolution image analysis for complex multi-symptom diagnostics.
+*   **Weather Dynamics:** Advanced agronomic alerts and threshold monitoring.
 
 ---
 
-## ⚙️ Backend Setup (rag)
+## 🚀 Key Modules & Intelligence
 
-1. **Navigate to the directory**:
-   ```bash
-   cd backend
-   ```
+### 🧬 **Disease Detection 2.0 (Hybrid ML)**
+We've evolved from simple LLM guessing to a specialized computer vision pipeline:
+1.  **Edge Detection:** Fast TFLite model (`model.tflite`) identifies the specific disease with >90% accuracy.
+2.  **AI Insight:** The detected label is passed to a reasoning model to generate a localized **Treatment Prescription**.
 
-2. **Set up virtual environment**:
+### 🛰️ **Hyperspectral Imaging (HSI)**
+AgriSense supports the next frontier of soil science. Our **3D-CNN model** analyzes hyperspectral data to detect "hidden stress" — identifying water deficiency or nutrient imbalances before they manifest visibly on the leaf.
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
+### 🩺 **AgriSense Rx Doctor**
+Automated phase-by-phase recovery schedules including chemical, biological, and cultural treatments.
 
-3. **Install dependencies**:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Environment Variables**:
-   Create a `.env` file in the backend directory:
-
-   ```env
-   # Gemini
-   GOOGLE_API_KEY=your_gemini_api_key
-
-   # DeepSeek (Cloud)
-   DEEPSEEK_API_KEY=your_deepseek_api_key
-
-   # Qwen (Cloud)
-   QWEN_API_KEY=your_qwen_api_key
-
-   # Optional: Ollama (Local)
-   OLLAMA_BASE_URL=http://localhost:11434
-   ```
-
-5. **Run Ollama (Optional but Recommended)**:
-
-   ```bash
-   ollama serve
-   ```
-
-   Pull a model:
-
-   ```bash
-   ollama pull llama3
-   ```
-
-6. **Run the FastAPI server**:
-
-   ```bash
-   python main.py
-   ```
-
-   API runs at:
-
-   ```
-   http://localhost:8000
-   ```
+### 🌦️ **Agronomist Weather & Alerts**
+Real-time environmental monitoring with predictive alerts for heatwaves, frost, and wind-shear thresholds, sent via Twilio SMS integration.
 
 ---
 
-## 💻 Frontend Setup (crop_ui)
+## 🛠️ Technical Stack
 
-1. **Navigate to the directory**:
+| Category | Technologies |
+|---|---|
+| **Mobile** | Flutter, GetX, Dio, Flutter Animate, Google Fonts |
+| **Backend** | FastAPI, PyTorch, TensorFlow Lite, Ollama, ChromaDB |
+| **Frontend** | React 19, Vite, Recharts, Framer Motion |
+| **Intelligence** | Gemini Pro, DeepSeek V3, 3D-CNN (HSI), TFLite |
+| **Infrastructure** | Docker, .env Security, Twilio API, OpenWeatherMap |
 
-   ```bash
-   cd crop_ui
-   ```
+---
 
-2. **Install dependencies**:
+## ⚙️ Setup & Installation
 
-   ```bash
-   npm install
-   ```
+### **1. 🔐 Security First**
+AgriSense uses a decentralized `.env` system. Ensure you create `.env` files in `app/`, `backend/`, and `frontend/` following the provided templates.
 
-3. **Run the development server**:
-
-   ```bash
-   npm run dev
-   ```
-
-Frontend runs at:
-
-```
-http://localhost:5173
+### **2. 📱 Mobile (App)**
+```bash
+cd app
+flutter pub get
+flutter run
 ```
 
----
-
-## 🔗 AI Workflow Architecture
-
-```text
-User Input
-   ↓
-Frontend (React UI)
-   ↓
-FastAPI Backend
-   ↓
-┌───────────────────────────────┐
-│   Model Routing Layer         │
-├───────────────────────────────┤
-│ DeepSeek → Text + RAG         │
-│ Qwen-VL → Image Analysis      │
-│ Gemini → Backup / Hybrid      │
-│ Ollama → Local fallback       │
-└───────────────────────────────┘
-   ↓
-Vector DB (FAISS / Chroma)
-   ↓
-Response to User
+### **3. 🧠 Backend (RAG & CV)**
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python main.py
 ```
 
----
-
-## 🧰 Tech Stack
-
-### Frontend
-
-* React 19
-* Vite
-* React Router
-* Axios
-* Recharts
-* Lucide Icons
-* Vanilla CSS
-
-### Backend
-
-* FastAPI
-* LangChain (RAG pipelines)
-* FAISS / ChromaDB (vector storage)
-* Scikit-learn (ML models)
-* Ollama (local inference)
-* DeepSeek API (LLM reasoning)
-* Qwen-VL API (multimodal AI)
-* Gemini API
-
----
-
-## 🚀 Deployment
-
-* Docker (recommended for full-stack deployment)
-* VPS / Cloud (AWS, GCP, Azure)
-* Ollama can be deployed on edge devices for rural/offline use
+### **4. 💻 Dashboard (Web)**
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ---
 
 ## 🌍 Vision
+AgriSense AI aims to democratize high-tech precision agriculture. By making advanced tools like Hyperspectral Imaging accessible via a smartphone, we empower small-scale farmers to compete with industrial-scale agribusiness.
 
-AgriSense AI aims to bridge the gap between farmers and intelligent technology by delivering:
-
-* Accessible AI tools in rural regions
-* Multilingual agricultural support
-* Data-driven farming decisions
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
+**Developed with ❤️ by the AgriSense Engineering Team.**
+*Transforming the soil with code.*

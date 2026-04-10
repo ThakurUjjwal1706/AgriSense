@@ -61,6 +61,7 @@ const Navbar = () => {
           <li><Link to="/treatment" className={`nav-link ${isActive('/treatment') ? 'nav-link--active' : ''}`}>🩺 Rx Doctor</Link></li>
           <li><Link to="/schemes" className={`nav-link ${isActive('/schemes') ? 'nav-link--active' : ''}`}>🏛️ Schemes</Link></li>
           <li><Link to="/weather" className={`nav-link ${isActive('/weather') ? 'nav-link--active' : ''}`}><span className="globe-link-icon">🌍</span> Weather</Link></li>
+          <li><Link to="/hsi" className={`nav-link ${isActive('/hsi') ? 'nav-link--active' : ''}`}>🛰️ HSI AI</Link></li>
 
           <li><Link to="/market" className={`nav-link ${isActive('/market') ? 'nav-link--active' : ''}`}>📈 Market</Link></li>
         </ul>

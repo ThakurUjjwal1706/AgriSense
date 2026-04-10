@@ -75,6 +75,9 @@ class VisionAnalysisResponse(BaseModel):
     recommendations: Optional[str] = None
     confidence_description: str
     ndvi_score: Optional[float] = Field(None, description="Calculated NDVI score from the image if available.")
+    # TFLite augmented fields
+    tflite_disease: Optional[str] = Field(None, description="Raw TFLite predicted class label.")
+    tflite_confidence: Optional[float] = Field(None, description="TFLite model confidence score 0-1.")
 
 
 class CropYieldRequest(BaseModel):
@@ -98,3 +101,18 @@ class CropYieldResponse(BaseModel):
     status: str
     predicted_yield_tonnes_per_ha: float = Field(..., description="Estimated yield in tonnes per hectare.")
     inputs_received: Optional[Dict[str, Any]] = None
+
+
+class HSIAnalysisResponse(BaseModel):
+    image: str = Field(..., description="Base64 encoded PNG color map.")
+    height: int
+    width: int
+
+
+class DiseasePredictionResponse(BaseModel):
+    disease: str = Field(..., description="Predicted disease class from TFLite model.")
+    confidence: float = Field(..., description="Model confidence score between 0.0 and 1.0.")
+    advice: str = Field(..., description="AI-generated explanation and treatment advice (via Ollama).")
+    crop: Optional[str] = Field(None, description="Crop name parsed from the disease label.")
+    is_healthy: bool = Field(False, description="True if the predicted class is a healthy plant.")
+    ndvi_score: Optional[float] = Field(None, description="Pseudo-NDVI calculated from visible channels.")

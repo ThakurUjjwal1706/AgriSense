@@ -1,0 +1,152 @@
+/* HSIPage.css */
+.hsi-page {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 80vh;
+}
+
+.hsi-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.hsi-header h1 {
+  font-size: 3rem;
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.hsi-header p {
+  color: #a0aec0;
+  font-size: 1.2rem;
+}
+
+.upload-section {
+  background: rgba(26, 32, 44, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.drop-zone {
+  border: 2px dashed rgba(79, 172, 254, 0.5);
+  padding: 60px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.drop-zone:hover {
+  background: rgba(79, 172, 254, 0.05);
+  border-color: #4facfe;
+}
+
+.drop-zone h3 {
+  margin-top: 15px;
+  font-size: 1.5rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.analyze-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: transform 0.2s ease;
+}
+
+.analyze-btn:hover {
+  transform: translateY(-2px);
+}
+
+.analyze-btn:disabled {
+  background: #4a5568;
+  cursor: not-allowed;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #4facfe;
+  border-radius: 50%;
+  animation: rotate 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.result-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.result-image-container {
+  background: #000;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-image {
+  width: 100%;
+  display: block;
+}
+
+.result-info {
+  background: rgba(26, 32, 44, 0.6);
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.green { background: #00ff00; }
+.yellow { background: #ffff00; }
+.red { background: #ff0000; }
+
+.legend-text h4 {
+  margin: 0;
+  color: white;
+}
+
+.legend-text p {
+  margin: 5px 0 0;
+  color: #a0aec0;
+  font-size: 0.9rem;
+}

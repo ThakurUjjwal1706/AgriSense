@@ -55,3 +55,6 @@ Pillow>=10.0.0
 ollama
 pandas
 scikit-learn
+torch
+joblib
+opencv-python

@@ -29,7 +29,7 @@ const TreatmentPage = () => {
     setIsLoading(true)
     
     try {
-      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'
+      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://172.32.5.98:8000'
       const payload = {
         crop_type: form.crop_type,
         disease_info: form.disease_info

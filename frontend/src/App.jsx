@@ -10,6 +10,7 @@ import WeatherPage from './pages/WeatherPage'
 import MarketPage from './pages/MarketPage'
 import SchemePage from './pages/SchemePage'
 import TreatmentPage from './pages/TreatmentPage'
+import HSIPage from './pages/HSIPage'
 import './App.css'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/market" element={<MarketPage />} />
             <Route path="/schemes" element={<SchemePage />} />
             <Route path="/treatment" element={<TreatmentPage />} />
+            <Route path="/hsi" element={<HSIPage />} />
           </Routes>
         </main>
         <Footer />

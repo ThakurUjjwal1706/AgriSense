@@ -35,7 +35,7 @@ const SchemePage = () => {
     try {
       // Temporary: Replace with actual fetch to VITE_BACKEND_URI + '/api/v1/match'
       // For now we will mock the AI call with a simulated delay and mock payload if backend is not live
-      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'
+      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://172.32.5.98:8000'
       const payload = {
         crop_type: form.crop_type,
         location: form.location,

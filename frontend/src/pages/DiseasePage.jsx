@@ -54,7 +54,7 @@ const DiseasePage = () => {
     setIsLoading(true)
 
     try {
-      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://localhost:8000'
+      const backendUri = import.meta.env.VITE_BACKEND_URI || 'http://172.32.5.98:8000'
       const formData = new FormData()
       formData.append('file', selectedFile)
       
