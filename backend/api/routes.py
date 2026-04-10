@@ -113,7 +113,7 @@ async def predict_plant_disease(file: UploadFile = File(...)):
 
     **Pipeline:**
     1. Validates uploaded image
-    2. Runs TFLite 3D-CNN model for fast, accurate disease classification
+    2. Runs a **ResNet model** (trained on **85,000+ images**) for high-accuracy disease classification
     3. Passes predicted label to Ollama/Gemini for expert agronomic explanation
     4. Returns structured result with disease, confidence, and treatment advice
 
