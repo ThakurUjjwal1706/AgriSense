@@ -1,0 +1,25 @@
+# Environment Variables
+.env
+.env.local
+*.env
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+
+# Go
+backend/main
+backend/*.exe
+*.exe
+
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
